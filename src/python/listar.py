@@ -28,3 +28,23 @@ def listarArvore(dir:str)->list:
         pasta[subpasta] = dict_subpasta
 
     return pasta
+
+def listarArquivos(pasta:dict, dir:str)->list:
+    """
+        Recebe um dicionário fornecido pela `listarArvore` e cria uma lista única com todos os arquivos.
+    """
+    # vai ser um dict, onde a chave é o nome do arquivo e o valor é seu diretório
+    arquivos = {}
+    # primeiramente, adiciona os arquivos da própria pasta ("./")
+    for arq in pasta["./"]:
+        arquivos[arq] = dir + "/" + arq
+    
+    # percorre a lista de subpastas, fazendo a mesma coisa
+    for subpasta in pasta:
+        if subpasta == "./": continue
+        # retorna o dict de arquivos
+        arq_subpasta = listarArquivos(pasta[subpasta], dir + "/" + subpasta)
+        # une os arquivos
+        arquivos = dict(arquivos, **arq_subpasta)
+
+    return arquivos
