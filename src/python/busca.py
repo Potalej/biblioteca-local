@@ -41,7 +41,7 @@ def busca(arquivos:dict, palavras:list)->list:
     ]
 
     # retira a acentuação dos arquivos
-    arquivos = [
+    arquivosUNI = [
         unidecode.unidecode(arquivo).upper() for arquivo in arquivos   
     ]
 
@@ -52,7 +52,7 @@ def busca(arquivos:dict, palavras:list)->list:
     pontuacao = {}
 
     # percorre os nomes dos arquivos
-    for nomeArquivo in arquivos:
+    for nomeArquivo in arquivosUNI:
         # verifica quais palavras correspondem
         correspondentes = [palavra for palavra in palavras if palavra in nomeArquivo]
         # e adiciona em cada palavra 1
@@ -61,13 +61,14 @@ def busca(arquivos:dict, palavras:list)->list:
 
     # tendo feito tudo isso, agora é preciso verificar a quantidade de ocorrências das palavras
     for nomeArquivo in arquivos:
+        uni = unidecode.unidecode(nomeArquivo).upper()
         pontos = 0
         for palavra in palavras:
-            if nomeArquivo in porPalavra[palavra]:
+            if uni in porPalavra[palavra]:
                 pontos += 1 + len(porPalavra[palavra])
         pontuacao[nomeArquivo] = pontos
 
     # agora, ordena a pontuação em ordem decrescente
     ordenado = dict(sorted(pontuacao.items(), key = lambda x: pontuacao[x[0]], reverse=True))
 
-    return [*ordenado.keys()]        
+    return [valor for valor in ordenado if ordenado[valor] > 0]        
